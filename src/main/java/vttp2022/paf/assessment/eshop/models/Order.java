@@ -4,6 +4,11 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
+
 // DO NOT CHANGE THIS CLASS
 public class Order {
 
@@ -53,5 +58,31 @@ public class Order {
 	public List<LineItem> getLineItems() { return this.lineItems; }
 	public void setLineItems(List<LineItem> lineItems) { this.lineItems = lineItems; }
 	public void addLineItem(LineItem lineItem) { this.lineItems.add(lineItem); }
+
+	public JsonObject toJson() {
+		JsonArrayBuilder jab = Json.createArrayBuilder();
+		for (LineItem li : lineItems) {
+			JsonObjectBuilder job = Json.createObjectBuilder();
+			job.add("item", li.getItem());
+			job.add("quantity", li.getQuantity());
+			jab.add(job.build());
+		}
+		return Json.createObjectBuilder()
+			.add("orderId", orderId)
+			.add("deliveryId", defaultValue(deliveryId, "Processing..."))
+			.add("name", name)
+			.add("address", address)
+			.add("email", email)
+			.add("status", defaultValue(status, "Pending"))
+			.add("orderDate", orderDate.toString())
+			.add("lineItems", jab.build())
+			.build();
+	}
+
+	public <T> T defaultValue(T value, T defValue) {
+		if (null != value)
+			return value;
+		return  defValue;
+	}
 }
 
