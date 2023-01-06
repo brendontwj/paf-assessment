@@ -74,7 +74,7 @@ public class OrderController {
 
 		JsonObjectBuilder results = Json.createObjectBuilder();
 		results.add("orderId", o.getOrderId());
-		results.add("status", o.getStatus());
+		results.add("status", "pending");
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(results.build().toString());
 	}
 
